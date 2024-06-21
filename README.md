@@ -1,2 +1,7 @@
 # sqlalchemy-ignitex
-Fork of sqlalchemy-ignite
+
+this is a fork of sqlalchemy-ignite in order to attempt
+to make the driver usable with Apache Superset
+
+
+
