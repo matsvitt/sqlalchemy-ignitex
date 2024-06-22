@@ -217,11 +217,13 @@ class IgniteContext(object):
         # GET CACHES
         #
         #############################################################
-        if stmt.startswith("GET CACHES"):
+        #if stmt.startswith("GET CACHES"):
+        if stmt.startswith("SELECT * FROM CACHES"):
             """
             Mimic the response of a schema request as a regular
             database request
             """
+            logging.debug("Getting Cache names")
             cache_names = self.get_schema_names()
             rows = [[cache_name] for cache_name in cache_names]
             response = {

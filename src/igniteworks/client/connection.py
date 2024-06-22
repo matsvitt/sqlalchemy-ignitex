@@ -64,6 +64,7 @@ class Connection(object):
                  username=None,
                  # password to authenticate to Ignite cluster.
                  password=None,
+                 database=None,
                  ):
 
         if servers:

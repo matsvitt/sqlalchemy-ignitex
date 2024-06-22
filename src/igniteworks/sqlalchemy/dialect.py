@@ -20,9 +20,10 @@
 from abc import ABC
 
 from sqlalchemy import types as sqltypes
+from sqlalchemy import text
 from sqlalchemy.engine import reflection
 from sqlalchemy.engine.default import DefaultDialect
-
+import logging
 from igniteworks.sqlalchemy import types as ignite_types
 
 """
@@ -112,6 +113,9 @@ class IgniteDialect(DefaultDialect, ABC):
             server = '{0}:{1}'.format(host, port or '10800')
         if 'servers' in kwargs:
             server = kwargs.pop('servers')
+            
+        if 'database' in kwargs:
+            kwargs.pop('database')
         if server:
             return self.dbapi.connect(servers=server, **kwargs)
 
@@ -135,18 +139,23 @@ class IgniteDialect(DefaultDialect, ABC):
         if schema:
             sql += " WITH " + schema
 
+
+        sql=text(sql)
         cursor = connection.execute(sql)
         return [_create_column_info(row) for row in cursor.fetchall()]
 
     @reflection.cache
     def get_schema_names(self, connection, **kw):
+        
         """
         This method retrieves all schemas registered in an
         Apache Ignite cluster
 
         The connection object refers to the Cursor object
         """
-        sql = "GET CACHES"
+        #sql = "GET CACHES"
+        sql = "SELECT * FROM CACHES"
+        sql=text(sql)
 
         cursor = connection.execute(sql)
         schemas = cursor.fetchall()
@@ -169,6 +178,8 @@ class IgniteDialect(DefaultDialect, ABC):
         if schema:
             sql += " FROM " + schema
 
+
+        sql=text(sql)
         cursor = connection.execute(sql)
         tables = cursor.fetchall()
 
